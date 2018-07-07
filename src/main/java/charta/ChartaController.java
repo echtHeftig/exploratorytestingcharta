@@ -39,8 +39,8 @@ public class ChartaController {
 
     @RequestMapping(value = "/charta/{id}", method = GET)
     public Charta getCharta(@PathVariable("id") long id) {
-        for(Charta charta : chartaList) {
-            if(id == charta.getId()) {
+        for (Charta charta : chartaList) {
+            if (id == charta.getId()) {
                 return charta;
             }
         }
@@ -48,5 +48,18 @@ public class ChartaController {
                 "Susanna", "", 13, 25, 25, 40,
                 10, "It/is/a/path", "Dies ist eine Notiz", "Es gab noch ein paar weitere Moeglichkeiten",
                 "Dies ist ein Bug. Und noch ein Bug", "Issue 1, Noch ein Issue 2");
+    }
+
+    @RequestMapping(value = "/charta", method = GET)
+    public String getAllChartaNamesAsConcatString() {
+        StringBuilder charterList = new StringBuilder("Charters-Names: ");
+        if (chartaList.isEmpty()) {
+            return "The list does not contain any Charters";
+        } else {
+            for (Charta charta : chartaList) {
+                charterList.append("\n").append(charta.getCharterName());
+            }
+        }
+        return charterList.toString();
     }
 }
