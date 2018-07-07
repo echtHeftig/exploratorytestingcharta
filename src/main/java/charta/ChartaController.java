@@ -24,7 +24,7 @@ public class ChartaController {
                 "Dies ist ein Bug. Und noch ein Bug", "Issue 1, Noch ein Issue 2");
     }
 
-    @RequestMapping(value = "/charta")
+    @RequestMapping(value = "/charta", method = POST)
     public Charta createAndReturnChartaGeneratedId() {
         return new Charta(counter.incrementAndGet(), "Charter Name", "Dies sind versch. Areas", new Calendar.Builder().setDate(2018, 7, 3).build(),
                 "Susanna", "", 13, 25, 25, 40,
