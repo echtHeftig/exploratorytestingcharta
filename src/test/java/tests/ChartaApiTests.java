@@ -1,13 +1,31 @@
 package tests;
 
 import api.ChartaApi;
+import charta.Application;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.approvaltests.Approvals;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import java.io.File;
 import java.util.Objects;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ChartaApiTests {
+
+    @LocalServerPort
+    int port;
+
+    @Before
+    public void setUp() {
+        RestAssured.port = port;
+    }
 
     @Test
     public void createChartaTestReturnsCorrectPayload() {

@@ -13,6 +13,7 @@ public class ChartaApi {
         return given()
                 .contentType(ContentType.JSON)
                 .body(jsonFile).accept(ContentType.JSON)
-                .when().post("http://localhost:8080/charta");
+                .log().all()
+                .when().post("/charta");
     }
 }
