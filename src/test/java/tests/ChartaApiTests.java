@@ -25,8 +25,15 @@ public class ChartaApiTests {
     @Before
     public void setUp() {
         RestAssured.port = port;
+        ChartaApi.deleteAllChartas();
     }
 
+    @Test
+    public void getChartaListReturnsEmptyMessageIfListIsEmpty() {
+        Response response = ChartaApi.getChartaList();
+
+        Approvals.verify(response.getBody().prettyPrint());
+    }
     @Test
     public void createChartaTestReturnsCorrectPayload() {
         File file = getTestDataFile("post/PostReturnsCorrectPayload.json");

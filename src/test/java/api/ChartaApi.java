@@ -16,4 +16,14 @@ public class ChartaApi {
                 .log().all()
                 .when().post("/charta");
     }
+
+    public static Response getChartaList() {
+        return given()
+                .when().get("/charta");
+    }
+
+    public static Response deleteAllChartas() {
+        return given()
+                .when().delete("/charta");
+    }
 }
