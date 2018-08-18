@@ -1,10 +1,10 @@
-package charta;
+package charter;
 
 import org.springframework.data.annotation.Id;
 
 import java.util.Calendar;
 
-public class Charta {
+public class Charter {
 
     @Id
     private String id;
@@ -24,9 +24,9 @@ public class Charta {
     private String bugs;
     private String issues;
 
-    public Charta() {}
+    public Charter() {}
 
-    public Charta(String charterName, String areas, Calendar start, String nameOfTester, String taskBreakDown, Integer duration, Integer testDesignAndExecutionTimeInPercent, Integer bugInvestigationAndReportingTimeInPercent, Integer sessionSetupTimeInPercentage, Integer charterVsOpportunityTimeInPercentage, String dataFilesPaths, String testNotes, String opportunities, String bugs, String issues) {
+    public Charter(String charterName, String areas, Calendar start, String nameOfTester, String taskBreakDown, Integer duration, Integer testDesignAndExecutionTimeInPercent, Integer bugInvestigationAndReportingTimeInPercent, Integer sessionSetupTimeInPercentage, Integer charterVsOpportunityTimeInPercentage, String dataFilesPaths, String testNotes, String opportunities, String bugs, String issues) {
         this.charterName = charterName;
         this.areas = areas;
         this.start = start;

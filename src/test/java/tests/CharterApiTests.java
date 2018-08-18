@@ -1,7 +1,7 @@
 package tests;
 
-import api.ChartaApi;
-import charta.Application;
+import api.CharterApi;
+import charter.Application;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.approvaltests.Approvals;
@@ -19,7 +19,7 @@ import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ChartaApiTests {
+public class CharterApiTests {
 
     @LocalServerPort
     int port;
@@ -27,20 +27,20 @@ public class ChartaApiTests {
     @Before
     public void setUp() {
         RestAssured.port = port;
-        ChartaApi.deleteAllChartas();
+        CharterApi.deleteAllCharters();
     }
 
     @Test
-    public void getChartaListReturnsEmptyArrayIfNoChartaExists() {
-        Response response = ChartaApi.getChartaList();
+    public void getCharterListReturnsEmptyArrayIfNoCharterExists() {
+        Response response = CharterApi.getCharterList();
 
         Approvals.verify(response.getBody().prettyPrint());
     }
 
     @Test
-    public void whenPostOnChartaEndpoint_thenPayloadAlwaysReturnsObjectContainingAnId() {
+    public void whenPostOnCharterEndpoint_thenPayloadAlwaysReturnsObjectContainingAnId() {
         File file = getTestDataFile("post/PostReturnsPayloadWithId.json");
-        Response response = ChartaApi.postCharta(file);
+        Response response = CharterApi.postCharter(file);
         response.then().body("id", matchesPattern("[a-z0-9]+"));
     }
 

@@ -7,24 +7,24 @@ import java.io.File;
 
 import static io.restassured.RestAssured.given;
 
-public class ChartaApi {
+public class CharterApi {
 
-    public static Response postCharta(File jsonFile) {
+    public static Response postCharter(File jsonFile) {
         return given()
                 .contentType(ContentType.JSON)
                 .body(jsonFile).accept(ContentType.JSON)
                 .log().all()
-                .when().post("/charta")
+                .when().post("/charters")
                 .prettyPeek();
     }
 
-    public static Response getChartaList() {
+    public static Response getCharterList() {
         return given()
-                .when().get("/charta");
+                .when().get("/charters");
     }
 
-    public static Response deleteAllChartas() {
+    public static Response deleteAllCharters() {
         return given()
-                .when().delete("/charta");
+                .when().delete("/charters");
     }
 }
