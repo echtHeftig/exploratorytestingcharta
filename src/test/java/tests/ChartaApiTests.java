@@ -15,6 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.util.Objects;
 
+import static org.hamcrest.text.MatchesPattern.matchesPattern;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ChartaApiTests {
@@ -29,25 +31,17 @@ public class ChartaApiTests {
     }
 
     @Test
-    public void getChartaListReturnsEmptyMessageIfListIsEmpty() {
+    public void getChartaListReturnsEmptyArrayIfNoChartaExists() {
         Response response = ChartaApi.getChartaList();
 
         Approvals.verify(response.getBody().prettyPrint());
     }
-    @Test
-    public void createChartaTestReturnsCorrectPayload() {
-        File file = getTestDataFile("post/PostReturnsCorrectPayload.json");
-        Response response = ChartaApi.postCharta(file);
-
-        Approvals.verify(response.getBody().prettyPrint());
-    }
 
     @Test
-    public void createChartaTestReturnsCorrectPayloadSecondTest() {
-        File file = getTestDataFile("post/PostReturnsCorrectPayloadSecondTest.json");
+    public void whenPostOnChartaEndpoint_thenPayloadAlwaysReturnsObjectContainingAnId() {
+        File file = getTestDataFile("post/PostReturnsPayloadWithId.json");
         Response response = ChartaApi.postCharta(file);
-
-        Approvals.verify(response.getBody().prettyPrint());
+        response.then().body("id", matchesPattern("[a-z0-9]+"));
     }
 
     private File getTestDataFile(String pathToFile) {

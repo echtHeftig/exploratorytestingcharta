@@ -44,6 +44,10 @@ public class Charta {
         this.issues = issues;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public String getCharterName() {
         return charterName;
     }

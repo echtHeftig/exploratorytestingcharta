@@ -14,7 +14,8 @@ public class ChartaApi {
                 .contentType(ContentType.JSON)
                 .body(jsonFile).accept(ContentType.JSON)
                 .log().all()
-                .when().post("/charta");
+                .when().post("/charta")
+                .prettyPeek();
     }
 
     public static Response getChartaList() {
