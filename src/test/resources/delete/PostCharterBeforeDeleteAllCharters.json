@@ -1,0 +1,17 @@
+{
+  "charterName": "Charta Post contains correct values",
+  "areas": "My area value is correct",
+  "start": "2018-12-13T14:15:02.030+0000",
+  "nameOfTester": "The POST tester",
+  "taskBreakDown": "A Breakdown for testing http post",
+  "duration": 14628,
+  "testDesignAndExecutionTimeInPercent": 214,
+  "bugInvestigationAndReportingTimeInPercent": 32,
+  "sessionSetupTimeInPercentage": 412,
+  "charterVsOpportunityTimeInPercentage": 251,
+  "dataFilesPaths": "My path to Data",
+  "testNotes": "Hier ist eine neue Notiz",
+  "opportunities": "Possibility to test further attributes",
+  "bugs": "Keine Bugs gefunden",
+  "issues": "Einige Issues mit Umbruch \n naechstes Issue"
+}

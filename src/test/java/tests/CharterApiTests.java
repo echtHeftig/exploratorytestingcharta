@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.util.Objects;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
@@ -66,6 +67,18 @@ public class CharterApiTests {
                 .body("bugs", is("Keine Bugs gefunden"))
                 .body("issues", is("Einige Issues mit Umbruch \n naechstes Issue"))
         ;
+    }
+
+    @Test
+    public void whenDeletingAllCharters_thenNoChartersExistAnymore() {
+        File file = getTestDataFile("delete/PostCharterBeforeDeleteAllCharters.json");
+        CharterApi.postCharter(file);
+        final Response charterListBeforeDelete = CharterApi.getCharterList();
+        charterListBeforeDelete.then().body("results.size()", equalTo(1));
+        final Response deleteAllResponse = CharterApi.deleteAllCharters();
+        deleteAllResponse.then().statusCode(200);
+        final Response charterListAfterDelete = CharterApi.getCharterList();
+        charterListAfterDelete.then().body("results.size()", equalTo(0));
     }
 
     private File getTestDataFile(String pathToFile) {
