@@ -17,6 +17,7 @@ import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 @RunWith(SpringRunner.class)
@@ -85,5 +86,27 @@ public class CharterApiTests {
         ClassLoader classLoader = getClass().getClassLoader();
         return new File(Objects.requireNonNull(classLoader.getResource(pathToFile))
                 .getFile());
+    }
+
+    @Test
+    public void whenPostOnCharterEndpointOnlyWithCharterName_thenEverythingElseIsNull(){
+        File file = getTestDataFile("post/OnlyCharterNameInPayload.json");
+        final Response response = CharterApi.postCharter(file);
+        response.then()
+                .body("charterName", is("Nur der CharterNamer ist definiert"))
+                .body("areas", isEmptyOrNullString())
+                .body("start", isEmptyOrNullString())
+                .body("nameOfTester", isEmptyOrNullString())
+                .body("taskBreakDown", isEmptyOrNullString())
+                .body("duration", isEmptyOrNullString())
+                .body("testDesignAndExecutionTimeInPercent", isEmptyOrNullString())
+                .body("bugInvestigationAndReportingTimeInPercent", isEmptyOrNullString())
+                .body("sessionSetupTimeInPercentage", isEmptyOrNullString())
+                .body("charterVsOpportunityTimeInPercentage", isEmptyOrNullString())
+                .body("dataFilesPaths", isEmptyOrNullString())
+                .body("testNotes", isEmptyOrNullString())
+                .body("opportunities", isEmptyOrNullString())
+                .body("bugs", isEmptyOrNullString())
+                .body("issues", isEmptyOrNullString());
     }
 }
