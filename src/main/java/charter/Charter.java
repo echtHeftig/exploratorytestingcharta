@@ -107,4 +107,8 @@ public class Charter {
     public String getIssues() {
         return issues;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

@@ -109,4 +109,48 @@ public class CharterApiTests {
                 .body("bugs", isEmptyOrNullString())
                 .body("issues", isEmptyOrNullString());
     }
+
+    @Test
+    public void whenUpdatingCharterWithPut_thenUpdatedCharterIsPersisted() {
+        File createWithPostFile = getTestDataFile("post/CreateCharterWithPostBeforePut.json");
+        File updateWithPutFile = getTestDataFile("put/UpdateCharterWithPut.json");
+        final Response postResponse = CharterApi.postCharter(createWithPostFile);
+        final String id = postResponse.path("id");
+        postResponse.then()
+                .body("id", is(id))
+                .body("charterName", is("My charter has a name and test notes vor dem Test"))
+                .body("areas", isEmptyOrNullString())
+                .body("start", isEmptyOrNullString())
+                .body("nameOfTester", isEmptyOrNullString())
+                .body("taskBreakDown", isEmptyOrNullString())
+                .body("duration", isEmptyOrNullString())
+                .body("testDesignAndExecutionTimeInPercent", isEmptyOrNullString())
+                .body("bugInvestigationAndReportingTimeInPercent", isEmptyOrNullString())
+                .body("sessionSetupTimeInPercentage", isEmptyOrNullString())
+                .body("charterVsOpportunityTimeInPercentage", isEmptyOrNullString())
+                .body("dataFilesPaths", isEmptyOrNullString())
+                .body("testNotes", is("Hier sind Testnotizen vor dem Test"))
+                .body("opportunities", isEmptyOrNullString())
+                .body("bugs", isEmptyOrNullString())
+                .body("issues", isEmptyOrNullString());
+
+        final Response putResponse = CharterApi.putCharter(id, updateWithPutFile);
+        putResponse.then()
+                .body("id", is(id))
+                .body("charterName", is("Nach dem Test gibt es einen neuen Testnamen und Bugs"))
+                .body("areas", isEmptyOrNullString())
+                .body("start", isEmptyOrNullString())
+                .body("nameOfTester", isEmptyOrNullString())
+                .body("taskBreakDown", isEmptyOrNullString())
+                .body("duration", isEmptyOrNullString())
+                .body("testDesignAndExecutionTimeInPercent", isEmptyOrNullString())
+                .body("bugInvestigationAndReportingTimeInPercent", isEmptyOrNullString())
+                .body("sessionSetupTimeInPercentage", isEmptyOrNullString())
+                .body("charterVsOpportunityTimeInPercentage", isEmptyOrNullString())
+                .body("dataFilesPaths", isEmptyOrNullString())
+                .body("testNotes", is("Hier sind Testnotizen nach dem Test"))
+                .body("opportunities", isEmptyOrNullString())
+                .body("bugs", is("Hier wurde nun ein Bug eingetragen"))
+                .body("issues", isEmptyOrNullString());
+        }
 }

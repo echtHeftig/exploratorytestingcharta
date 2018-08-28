@@ -27,4 +27,16 @@ public class CharterApi {
         return given()
                 .when().delete("/charters");
     }
+
+    public static Response putCharter(String uniqueId, File updateWithPutFile) {
+        return given()
+                .contentType(ContentType.JSON)
+                .body(updateWithPutFile)
+                .accept(ContentType.JSON)
+                .pathParam("id", uniqueId)
+                .log().all()
+                .when()
+                .put("/charters/{id}")
+                .prettyPeek();
+    }
 }
