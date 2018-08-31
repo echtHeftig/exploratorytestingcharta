@@ -41,9 +41,30 @@ public class CharterController {
         Optional<Charter> charterOptional = charterRepository.findById(id);
         if(!charterOptional.isPresent()) {
             System.out.println(String.format("Es gibt kein Charter mit der id {%s}", id));
+        } else {
+            updateCharterOptional(charterOptional, charter);
+            charterRepository.save(charterOptional.get());
         }
-        charter.setId(id);
-        charterRepository.save(charter);
         return charterRepository.findById(id);
+    }
+
+    private void updateCharterOptional(Optional<Charter> charterOptional, Charter charter) {
+        if(charterOptional.isPresent()) {
+            charterOptional.get().setCharterName(charter.getCharterName());
+            charterOptional.get().setAreas(charter.getAreas());
+            charterOptional.get().setStart(charter.getStart());
+            charterOptional.get().setNameOfTester(charter.getNameOfTester());
+            charterOptional.get().setTaskBreakDown(charter.getTaskBreakDown());
+            charterOptional.get().setDuration(charter.getDuration());
+            charterOptional.get().setTestDesignAndExecutionTimeInPercent(charter.getTestDesignAndExecutionTimeInPercent());
+            charterOptional.get().setBugInvestigationAndReportingTimeInPercent(charter.getBugInvestigationAndReportingTimeInPercent());
+            charterOptional.get().setSessionSetupTimeInPercentage(charter.getSessionSetupTimeInPercentage());
+            charterOptional.get().setCharterVsOpportunityTimeInPercentage(charter.getCharterVsOpportunityTimeInPercentage());
+            charterOptional.get().setDataFilesPaths(charter.getDataFilesPaths());
+            charterOptional.get().setTestNotes(charter.getTestNotes());
+            charterOptional.get().setOpportunities(charter.getOpportunities());
+            charterOptional.get().setBugs(charter.getBugs());
+            charterOptional.get().setIssues(charter.getIssues());
+        }
     }
 }

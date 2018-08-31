@@ -1,4 +1,5 @@
 {
   "charterName": "My charter has a name and test notes vor dem Test",
+  "areas": "Das hier wird hoffentlich durch null ueberschrieben",
   "testNotes": "Hier sind Testnotizen vor dem Test"
 }

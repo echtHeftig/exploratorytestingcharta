@@ -119,7 +119,7 @@ public class CharterApiTests {
         postResponse.then()
                 .body("id", is(id))
                 .body("charterName", is("My charter has a name and test notes vor dem Test"))
-                .body("areas", isEmptyOrNullString())
+                .body("areas", is("Das hier wird hoffentlich durch null ueberschrieben"))
                 .body("start", isEmptyOrNullString())
                 .body("nameOfTester", isEmptyOrNullString())
                 .body("taskBreakDown", isEmptyOrNullString())

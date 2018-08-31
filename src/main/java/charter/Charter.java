@@ -111,4 +111,64 @@ public class Charter {
     public void setId(String id) {
         this.id = id;
     }
+
+    public void setCharterName(String charterName) {
+        this.charterName = charterName;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
+    }
+
+    public void setStart(Calendar start) {
+        this.start = start;
+    }
+
+    public void setNameOfTester(String nameOfTester) {
+        this.nameOfTester = nameOfTester;
+    }
+
+    public void setTaskBreakDown(String taskBreakDown) {
+        this.taskBreakDown = taskBreakDown;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public void setTestDesignAndExecutionTimeInPercent(Integer testDesignAndExecutionTimeInPercent) {
+        this.testDesignAndExecutionTimeInPercent = testDesignAndExecutionTimeInPercent;
+    }
+
+    public void setBugInvestigationAndReportingTimeInPercent(Integer bugInvestigationAndReportingTimeInPercent) {
+        this.bugInvestigationAndReportingTimeInPercent = bugInvestigationAndReportingTimeInPercent;
+    }
+
+    public void setSessionSetupTimeInPercentage(Integer sessionSetupTimeInPercentage) {
+        this.sessionSetupTimeInPercentage = sessionSetupTimeInPercentage;
+    }
+
+    public void setCharterVsOpportunityTimeInPercentage(Integer charterVsOpportunityTimeInPercentage) {
+        this.charterVsOpportunityTimeInPercentage = charterVsOpportunityTimeInPercentage;
+    }
+
+    public void setDataFilesPaths(String dataFilesPaths) {
+        this.dataFilesPaths = dataFilesPaths;
+    }
+
+    public void setTestNotes(String testNotes) {
+        this.testNotes = testNotes;
+    }
+
+    public void setOpportunities(String opportunities) {
+        this.opportunities = opportunities;
+    }
+
+    public void setBugs(String bugs) {
+        this.bugs = bugs;
+    }
+
+    public void setIssues(String issues) {
+        this.issues = issues;
+    }
 }
