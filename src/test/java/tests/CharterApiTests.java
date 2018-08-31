@@ -5,19 +5,19 @@ import charter.Application;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.approvaltests.Approvals;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.util.Objects;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 @RunWith(SpringRunner.class)
@@ -153,4 +153,36 @@ public class CharterApiTests {
                 .body("bugs", is("Hier wurde nun ein Bug eingetragen"))
                 .body("issues", isEmptyOrNullString());
         }
+
+    @Test
+    public void whenUpdatingNonExistingCharterWithPut_thenNewCharterIsPersisted() {
+        //Arrange
+        final String nonExistingCharterId = "142071847190";
+        final Response response = CharterApi.getSingleCharter(nonExistingCharterId);
+        Assert.assertEquals(HttpStatus.NOT_FOUND.value(), response.statusCode());
+
+        //Act
+        File createWithPutFile = getTestDataFile("put/CreateCharterWithPut.json");
+        final Response putResponse = CharterApi.putCharter(nonExistingCharterId, createWithPutFile);
+
+        //Assert
+        putResponse.then()
+                .body("id", not(nonExistingCharterId))
+                .body("id", matchesPattern("[a-z0-9]+"))
+                .body("charterName", is("Diese Charter existiert noch nicht. Ein Put ist Create or Update"))
+                .body("areas", isEmptyOrNullString())
+                .body("start", isEmptyOrNullString())
+                .body("nameOfTester", isEmptyOrNullString())
+                .body("taskBreakDown", isEmptyOrNullString())
+                .body("duration", isEmptyOrNullString())
+                .body("testDesignAndExecutionTimeInPercent", isEmptyOrNullString())
+                .body("bugInvestigationAndReportingTimeInPercent", isEmptyOrNullString())
+                .body("sessionSetupTimeInPercentage", isEmptyOrNullString())
+                .body("charterVsOpportunityTimeInPercentage", isEmptyOrNullString())
+                .body("dataFilesPaths", isEmptyOrNullString())
+                .body("testNotes", is("Da es nicht existiert, bedeutet Put hier Create"))
+                .body("opportunities", is("Es ist die Chance, CreateOrUpdate per Put zu ueben"))
+                .body("bugs", is("Hier wurde nun ein Bug eingetragen"))
+                .body("issues", isEmptyOrNullString());
+    }
 }

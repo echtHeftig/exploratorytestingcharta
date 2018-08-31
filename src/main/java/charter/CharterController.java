@@ -1,10 +1,8 @@
 package charter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +38,23 @@ public class CharterController {
     public Optional<Charter> updateAndReturnCharter(@RequestBody Charter charter, @PathVariable String id) {
         Optional<Charter> charterOptional = charterRepository.findById(id);
         if(!charterOptional.isPresent()) {
-            System.out.println(String.format("Es gibt kein Charter mit der id {%s}", id));
+            System.out.println(String.format("Es gibt keine Charter mit der id {%s}. Neue Charter wird erstellt", id));
+            charterRepository.save(charter);
+            return Optional.of(charter);
         } else {
             updateCharterOptional(charterOptional, charter);
             charterRepository.save(charterOptional.get());
         }
         return charterRepository.findById(id);
+    }
+
+    @RequestMapping(value = "/charters/{id}", method = GET)
+    public ResponseEntity<Object> getSingleCharter(@PathVariable String id) {
+        Optional<Charter> charterOptional = charterRepository.findById(id);
+        if(!charterOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(charterOptional);
     }
 
     private void updateCharterOptional(Optional<Charter> charterOptional, Charter charter) {

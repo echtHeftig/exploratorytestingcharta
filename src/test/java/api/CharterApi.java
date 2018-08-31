@@ -39,4 +39,10 @@ public class CharterApi {
                 .put("/charters/{id}")
                 .prettyPeek();
     }
+
+    public static Response getSingleCharter(String uniqueId) {
+        return given()
+                .pathParam("id", uniqueId)
+                .when().get("/charters/{id}");
+    }
 }

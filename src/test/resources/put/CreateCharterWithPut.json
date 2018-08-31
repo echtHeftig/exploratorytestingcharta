@@ -1,0 +1,6 @@
+{
+  "charterName": "Diese Charter existiert noch nicht. Ein Put ist Create or Update",
+  "testNotes": "Da es nicht existiert, bedeutet Put hier Create",
+  "opportunities": "Es ist die Chance, CreateOrUpdate per Put zu ueben",
+  "bugs": "Hier wurde nun ein Bug eingetragen"
+}
