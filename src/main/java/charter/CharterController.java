@@ -1,5 +1,7 @@
 package charter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,8 @@ public class CharterController {
 
     @Autowired
     private CharterRepository charterRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(CharterController.class);
 
     @RequestMapping(value = "/charters", method = POST)
     public Charter createAndReturnCharter(@RequestBody Charter charter) {
@@ -38,7 +42,9 @@ public class CharterController {
     public Optional<Charter> updateAndReturnCharter(@RequestBody Charter charter, @PathVariable String id) {
         Optional<Charter> charterOptional = charterRepository.findById(id);
         if(!charterOptional.isPresent()) {
-            System.out.println(String.format("Es gibt keine Charter mit der id {%s}. Neue Charter wird erstellt", id));
+            log.debug(String.format(
+                    "Es gibt keine Charter mit der id {%s}. Neue Charter mit neuer CharterId wird erstellt", id)
+            );
             charterRepository.save(charter);
             return Optional.of(charter);
         } else {
