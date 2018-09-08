@@ -5,6 +5,7 @@ import charter.Application;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.approvaltests.Approvals;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -190,5 +191,13 @@ public class CharterApiTests {
     public void whenCreateByPostSuccesful_thenReturnStatus201Created() {
         final Response response = CharterApi.postCharter("{ \"charterName\": \"postSoll201CreatedSein\" }");
         Assert.assertEquals(HttpStatus.CREATED.value(), response.statusCode());
+    }
+
+    @Test
+    public void whenCreateByPostSuccesful_thenReturnLocationHeader() {
+        final Response response = CharterApi.postCharter(
+                "{ \"charterName\": \"es soll ein location header geben\"}");
+        Assert.assertNotNull(response.getHeader("Location"));
+        MatcherAssert.assertThat(response.getHeader("Location"), matchesPattern("/charters/[a-z0-9]+"));
     }
 }

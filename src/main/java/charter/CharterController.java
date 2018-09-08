@@ -3,6 +3,7 @@ package charter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +25,11 @@ public class CharterController {
     private static final Logger log = LoggerFactory.getLogger(CharterController.class);
 
     @RequestMapping(value = "/charters", method = POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Charter createAndReturnCharter(@RequestBody Charter charter) {
+    public ResponseEntity<Charter> createAndReturnCharter(@RequestBody Charter charter) {
         charterRepository.save(charter);
-        return charter;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.LOCATION, "/charters/"+charter.getId());
+        return new ResponseEntity<>(charter, httpHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/charters", method = GET)
