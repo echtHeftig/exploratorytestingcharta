@@ -185,4 +185,10 @@ public class CharterApiTests {
                 .body("bugs", is("Hier wurde nun ein Bug eingetragen"))
                 .body("issues", isEmptyOrNullString());
     }
+
+    @Test
+    public void whenCreateByPostSuccesful_thenReturnStatus201Created() {
+        final Response response = CharterApi.postCharter("{ \"charterName\": \"postSoll201CreatedSein\" }");
+        Assert.assertEquals(HttpStatus.CREATED.value(), response.statusCode());
+    }
 }

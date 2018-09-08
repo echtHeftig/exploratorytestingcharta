@@ -18,6 +18,15 @@ public class CharterApi {
                 .prettyPeek();
     }
 
+    public static Response postCharter(String jsonAsString) {
+        return given().contentType(ContentType.JSON)
+                .body(jsonAsString)
+                .log().all()
+                .accept(ContentType.JSON)
+                .when().post("/charters")
+                .prettyPeek();
+    }
+
     public static Response getCharterList() {
         return given()
                 .when().get("/charters");
@@ -45,4 +54,5 @@ public class CharterApi {
                 .pathParam("id", uniqueId)
                 .when().get("/charters/{id}");
     }
+
 }
