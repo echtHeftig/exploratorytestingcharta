@@ -204,16 +204,51 @@ public class CharterApiTests {
 
     @Test
     public void whenDeleteSingleCharter_thenReturnListWithoutDeletedCharter() {
-        createCharterMultipleTimes(5);
+        final int amountOfChartersToCreateBeforeTest = 5;
+        createCharterMultipleTimes(amountOfChartersToCreateBeforeTest);
         final Response getCharterListResponse = CharterApi.getCharterList();
         final int charterCountBeforeDelete = getCharterListResponse.jsonPath().getList("$").size();
-        Assert.assertThat(charterCountBeforeDelete, is(5));
+        Assert.assertThat(charterCountBeforeDelete, is(amountOfChartersToCreateBeforeTest));
         List<String> idList = getCharterListResponse.getBody().jsonPath().getList("id");
-        final Response response = CharterApi.deleteSingleCharter(idList.get(0));
+        CharterApi.deleteSingleCharter(idList.get(0));
         final int charterCountAfterDelete = CharterApi.getCharterList().jsonPath().getList("$").size();
-        Assert.assertThat(charterCountAfterDelete, is(4));
+        Assert.assertThat(charterCountAfterDelete, is(amountOfChartersToCreateBeforeTest-1));
     }
 
+    @Test
+    public void whenDeleteSingleCharter_thenReturn204NoContent() {
+        final int amountOfChartersToCreateBeforeTest = 7;
+        createCharterMultipleTimes(amountOfChartersToCreateBeforeTest);
+        final Response getCharterListResponse = CharterApi.getCharterList();
+        final int charterCountBeforeDelete = getCharterListResponse.jsonPath().getList("$").size();
+        Assert.assertThat(charterCountBeforeDelete, is(amountOfChartersToCreateBeforeTest));
+        List<String> idList = getCharterListResponse.getBody().jsonPath().getList("id");
+        final Response response = CharterApi.deleteSingleCharter(idList.get(0));
+        Assert.assertThat(response.statusCode(), is(HttpStatus.NO_CONTENT.value()));
+        final int charterCountAfterDelete = CharterApi.getCharterList().jsonPath().getList("$").size();
+        Assert.assertThat(charterCountAfterDelete, is(amountOfChartersToCreateBeforeTest-1));
+    }
+
+    @Test
+    public void whenDeleteNonExistingCharterInEmptyDatabase_thenReturn404NotFound() {
+        final Response getCharterListResponse = CharterApi.getCharterList();
+        final int charterCountBeforeDelete = getCharterListResponse.jsonPath().getList("$").size();
+        Assert.assertThat(charterCountBeforeDelete, is(0));
+        final Response response = CharterApi.deleteSingleCharter("71489bhf4151");
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void whenDeleteNonExistingCharterInFilledDatabase_thenReturn404NotFound() {
+        final int amountOfChartersToCreateBeforeTest = 7;
+        createCharterMultipleTimes(amountOfChartersToCreateBeforeTest);
+        final Response getCharterListResponse = CharterApi.getCharterList();
+        final int charterCountBeforeDelete = getCharterListResponse.jsonPath().getList("$").size();
+        Assert.assertThat(charterCountBeforeDelete, is(amountOfChartersToCreateBeforeTest));
+        final Response response = CharterApi.deleteSingleCharter("71489bhf4151");
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
+    }
+    
     private void createCharterMultipleTimes(int amountOfChartersToCreate) {
         for (int i = 0; i < amountOfChartersToCreate; i++) {
             CharterApi.postCharter("{ \"charterName\" : \"myCharter+" + i + "\"}");

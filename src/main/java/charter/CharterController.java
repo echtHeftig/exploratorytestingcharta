@@ -68,8 +68,14 @@ public class CharterController {
     }
 
     @RequestMapping(value = "/charters/{id}", method = DELETE)
-    public void deleteSingleCharter(@PathVariable String id) {
+    public ResponseEntity deleteSingleCharter(@PathVariable String id) {
+        Optional<Charter> charter = charterRepository.findById(id);
+        if(!charter.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
         charterRepository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     private void updateCharterOptional(Optional<Charter> charterOptional, Charter charter) {
