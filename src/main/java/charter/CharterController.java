@@ -37,9 +37,13 @@ public class CharterController {
         return charterRepository.findAll();
     }
 
-    @RequestMapping(value = "/charters", method = DELETE)
-    public void deleteAllCharters() {
-        charterRepository.deleteAll();
+    @RequestMapping(value = "/charters/{id}", method = GET)
+    public ResponseEntity<Object> getSingleCharter(@PathVariable String id) {
+        Optional<Charter> charterOptional = charterRepository.findById(id);
+        if(!charterOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(charterOptional);
     }
 
     @RequestMapping(value = "/charters/{id}", method = PUT)
@@ -58,13 +62,14 @@ public class CharterController {
         return charterRepository.findById(id);
     }
 
-    @RequestMapping(value = "/charters/{id}", method = GET)
-    public ResponseEntity<Object> getSingleCharter(@PathVariable String id) {
-        Optional<Charter> charterOptional = charterRepository.findById(id);
-        if(!charterOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(charterOptional);
+    @RequestMapping(value = "/charters", method = DELETE)
+    public void deleteAllCharters() {
+        charterRepository.deleteAll();
+    }
+
+    @RequestMapping(value = "/charters/{id}", method = DELETE)
+    public void deleteSingleCharter(@PathVariable String id) {
+        charterRepository.deleteById(id);
     }
 
     private void updateCharterOptional(Optional<Charter> charterOptional, Charter charter) {

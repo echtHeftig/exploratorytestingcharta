@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.*;
@@ -199,5 +200,23 @@ public class CharterApiTests {
                 "{ \"charterName\": \"es soll ein location header geben\"}");
         Assert.assertNotNull(response.getHeader("Location"));
         MatcherAssert.assertThat(response.getHeader("Location"), matchesPattern("/charters/[a-z0-9]+"));
+    }
+
+    @Test
+    public void whenDeleteSingleCharter_thenReturnListWithoutDeletedCharter() {
+        createCharterMultipleTimes(5);
+        final Response getCharterListResponse = CharterApi.getCharterList();
+        final int charterCountBeforeDelete = getCharterListResponse.jsonPath().getList("$").size();
+        Assert.assertThat(charterCountBeforeDelete, is(5));
+        List<String> idList = getCharterListResponse.getBody().jsonPath().getList("id");
+        final Response response = CharterApi.deleteSingleCharter(idList.get(0));
+        final int charterCountAfterDelete = CharterApi.getCharterList().jsonPath().getList("$").size();
+        Assert.assertThat(charterCountAfterDelete, is(4));
+    }
+
+    private void createCharterMultipleTimes(int amountOfChartersToCreate) {
+        for (int i = 0; i < amountOfChartersToCreate; i++) {
+            CharterApi.postCharter("{ \"charterName\" : \"myCharter+" + i + "\"}");
+        }
     }
 }

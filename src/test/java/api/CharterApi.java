@@ -29,7 +29,7 @@ public class CharterApi {
 
     public static Response getCharterList() {
         return given()
-                .when().get("/charters");
+                .when().get("/charters").prettyPeek();
     }
 
     public static Response deleteAllCharters() {
@@ -55,4 +55,9 @@ public class CharterApi {
                 .when().get("/charters/{id}");
     }
 
+    public static Response deleteSingleCharter(String id) {
+        return given()
+                .pathParam("id", id)
+                .when().delete("/charters/{id}");
+    }
 }
