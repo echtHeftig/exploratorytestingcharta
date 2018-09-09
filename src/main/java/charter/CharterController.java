@@ -47,7 +47,7 @@ public class CharterController {
     }
 
     @RequestMapping(value = "/charters/{id}", method = PUT)
-    public Optional<Charter> updateAndReturnCharter(@RequestBody Charter charter, @PathVariable String id) {
+    public Optional<Charter> createOrUpdateCharter(@RequestBody Charter charter, @PathVariable String id) {
         Optional<Charter> charterOptional = charterRepository.findById(id);
         if(!charterOptional.isPresent()) {
             log.debug(String.format(
