@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MyMainView extends UI {
 
     @Autowired
-    CharterController charterController;
+    private CharterRepository charterRepository;
 
     @Override
     protected void init(VaadinRequest request) {
         VerticalLayout verticalLayout = new VerticalLayout();
         Grid<Charter> grid = new Grid<>(Charter.class);
-        grid.setItems(charterController.getAllCharters());
+        grid.setItems(charterRepository.findAll());
         grid.setWidth(100, Unit.PERCENTAGE);
         grid.setColumnReorderingAllowed(true);
         grid.setColumnOrder("id", "charterName", "nameOfTester");
