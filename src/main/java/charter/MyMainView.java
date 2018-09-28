@@ -3,10 +3,7 @@ package charter;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,7 +30,7 @@ public class MyMainView extends UI {
     private Button buildDeleteButton(Charter p) {
         Button button = new Button(VaadinIcons.CLOSE);
         button.addStyleName(ValoTheme.BUTTON_SMALL);
-        button.addClickListener(e -> deleteCharter(p));
+        button.addClickListener(e -> createModalConfirmationDialog(p));
         return button;
     }
 
@@ -41,4 +38,35 @@ public class MyMainView extends UI {
         charterRepository.delete(p);
         grid.setItems(charterRepository.findAll());
     }
+
+    private void createModalConfirmationDialog(Charter c) {
+
+        Window confirmationDialogWindow = new Window("Confirm Delete Dialog");
+
+        confirmationDialogWindow.setHeight("200px");
+        confirmationDialogWindow.setWidth("400px");
+        confirmationDialogWindow.setPositionX(200);
+        confirmationDialogWindow.setPositionY(50);
+        confirmationDialogWindow.setModal(true);
+
+        VerticalLayout verticalLayout = new VerticalLayout();
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        Button confirmDeleteButton = new Button("Delete", VaadinIcons.EXCLAMATION_CIRCLE);
+        Button cancelButton = new Button("Cancel");
+        Label label = new Label("Möchtest du die Charter wirklich löschen?");
+        horizontalLayout.addComponents(cancelButton, confirmDeleteButton);
+        verticalLayout.addComponents(label, horizontalLayout);
+
+        confirmDeleteButton.addClickListener((Button.ClickListener) event -> {
+            deleteCharter(c);
+            confirmationDialogWindow.close();
+        });
+        cancelButton.addClickListener((Button.ClickListener) event -> {
+            confirmationDialogWindow.close();
+        });
+
+        confirmationDialogWindow.setContent(verticalLayout);
+        UI.getCurrent().addWindow(confirmationDialogWindow);
+    }
+
 }
