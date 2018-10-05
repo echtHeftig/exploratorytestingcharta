@@ -7,7 +7,9 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @SpringUI(path = "")
 public class MyMainView extends UI {
@@ -76,22 +78,33 @@ public class MyMainView extends UI {
         idTxtField.setValue(charter.getId());
         idTxtField.setReadOnly(true);
         idTxtField.setEnabled(false);
-        idTxtField.setData(charter.getId());
-        charterNameTxtField.setValue(charter.getCharterName());
-        areasTxtField.setValue(charter.getAreas());
-        startTxtField.setValue(charter.getStart().toString());
-        nameOfTesterTxtField.setValue(charter.getNameOfTester());
-        taskBreakDownTxtField.setValue(charter.getTaskBreakDown());
-        durationTxtField.setValue(charter.getDuration().toString());
-        testDesignAndExecutionTimeInPercentTxtField.setValue(charter.getTestDesignAndExecutionTimeInPercent().toString());
-        bugInvestigationAndReportingTimeInPercentTxtField.setValue(charter.getBugInvestigationAndReportingTimeInPercent().toString());
-        sessionSetupTimeInPercentageTxtField.setValue(charter.getSessionSetupTimeInPercentage().toString());
-        charterVsOpportunityTimeInPercentageTxtField.setValue(charter.getCharterVsOpportunityTimeInPercentage().toString());
-        dataFilesPathsTxtField.setValue(charter.getDataFilesPaths());
-        testNotesTxtField.setValue(charter.getTestNotes());
-        opportunitiesTxtField.setValue(charter.getOpportunities());
-        bugsTxtField.setValue(charter.getBugs());
-        issues.setValue(charter.getIssues());
+        charterNameTxtField.setValue(Optional.ofNullable(charter.getCharterName()).orElse(""));
+        areasTxtField.setValue(Optional.ofNullable(charter.getAreas()).orElse(""));
+        startTxtField.setValue(
+                charter.getStart() == null ? "" : charter.getStart().toString()
+        );
+        nameOfTesterTxtField.setValue(Optional.ofNullable(charter.getNameOfTester()).orElse(""));
+        taskBreakDownTxtField.setValue(Optional.ofNullable(charter.getTaskBreakDown()).orElse(""));
+        durationTxtField.setValue(
+                charter.getDuration() == null ? "" : charter.getDuration().toString()
+        );
+        testDesignAndExecutionTimeInPercentTxtField.setValue(
+                charter.getTestDesignAndExecutionTimeInPercent() == null ? "" : charter.getTestDesignAndExecutionTimeInPercent().toString()
+        );
+        bugInvestigationAndReportingTimeInPercentTxtField.setValue(
+                charter.getBugInvestigationAndReportingTimeInPercent() == null ? "" : charter.getBugInvestigationAndReportingTimeInPercent().toString()
+        );
+        sessionSetupTimeInPercentageTxtField.setValue(
+                charter.getSessionSetupTimeInPercentage() == null ? "" : charter.getSessionSetupTimeInPercentage().toString()
+        );
+        charterVsOpportunityTimeInPercentageTxtField.setValue(
+                charter.getCharterVsOpportunityTimeInPercentage() == null ? "" : charter.getCharterVsOpportunityTimeInPercentage().toString()
+        );
+        dataFilesPathsTxtField.setValue(Optional.ofNullable(charter.getDataFilesPaths()).orElse(""));
+        testNotesTxtField.setValue(Optional.ofNullable(charter.getTestNotes()).orElse(""));
+        opportunitiesTxtField.setValue(Optional.ofNullable(charter.getOpportunities()).orElse(""));
+        bugsTxtField.setValue(Optional.ofNullable(charter.getBugs()).orElse(""));
+        issues.setValue(Optional.ofNullable(charter.getIssues()).orElse(""));
 
         List<Component> components = new ArrayList<>();
         components.add(idTxtField);
@@ -110,12 +123,27 @@ public class MyMainView extends UI {
         components.add(opportunitiesTxtField);
         components.add(bugsTxtField);
         components.add(issues);
+
+        Button saveButton = new Button(VaadinIcons.SAFE);
+        saveButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        Charter overriddenCharter = overrideCharterByTextFieldValues(charter, components);
+        saveButton.addClickListener(e -> createModalSaveConfirmationDialog(overriddenCharter));
+        components.add(saveButton);
         return components;
     }
+
+    private Charter overrideCharterByTextFieldValues(Charter charter, List<Component> components) {
+        return null;
+            }
 
 
     private void deleteCharter(Charter p) {
         charterRepository.delete(p);
+        grid.setItems(charterRepository.findAll());
+    }
+
+    private void saveCharter(Charter p) {
+        charterRepository.save(p);
         grid.setItems(charterRepository.findAll());
     }
 
@@ -139,6 +167,36 @@ public class MyMainView extends UI {
 
         confirmDeleteButton.addClickListener((Button.ClickListener) event -> {
             deleteCharter(c);
+            confirmationDialogWindow.close();
+        });
+        cancelButton.addClickListener((Button.ClickListener) event -> {
+            confirmationDialogWindow.close();
+        });
+
+        confirmationDialogWindow.setContent(verticalLayout);
+        UI.getCurrent().addWindow(confirmationDialogWindow);
+    }
+
+    private void createModalSaveConfirmationDialog(Charter c) {
+
+        Window confirmationDialogWindow = new Window("Confirm Save Dialog");
+
+        confirmationDialogWindow.setHeight("200px");
+        confirmationDialogWindow.setWidth("400px");
+        confirmationDialogWindow.setPositionX(200);
+        confirmationDialogWindow.setPositionY(50);
+        confirmationDialogWindow.setModal(true);
+
+        VerticalLayout verticalLayout = new VerticalLayout();
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        Button confirmSaveButton = new Button("Save", VaadinIcons.EXCLAMATION_CIRCLE);
+        Button cancelButton = new Button("Cancel");
+        Label label = new Label("Möchtest du die Charter wirklich speichern?");
+        horizontalLayout.addComponents(cancelButton, confirmSaveButton);
+        verticalLayout.addComponents(label, horizontalLayout);
+
+        confirmSaveButton.addClickListener((Button.ClickListener) event -> {
+            saveCharter(c);
             confirmationDialogWindow.close();
         });
         cancelButton.addClickListener((Button.ClickListener) event -> {
