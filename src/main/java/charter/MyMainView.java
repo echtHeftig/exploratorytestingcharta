@@ -7,8 +7,6 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @SpringUI(path = "")
@@ -18,6 +16,23 @@ public class MyMainView extends UI {
     private CharterRepository charterRepository;
 
     private Grid<Charter> grid = new Grid<>(Charter.class);
+
+    private TextField idTxtField = new TextField("ID");
+    private TextField charterNameTxtField = new TextField("CharterName");
+    private TextField areasTxtField = new TextField("areasCaption");
+    private TextField startTxtField = new TextField("startCaption");
+    private TextField nameOfTesterTxtField = new TextField("nameOfTesterCaption");
+    private TextField taskBreakDownTxtField = new TextField("taskBreakDownCaption");
+    private TextField durationTxtField = new TextField("durationCaption");
+    private TextField testDesignAndExecutionTimeInPercentTxtField = new TextField("testDesignAndExecutionTimeInPercentCaption");
+    private TextField bugInvestigationAndReportingTimeInPercentTxtField = new TextField("bugInvestigationAndReportingTimeInPercentCaption");
+    private TextField sessionSetupTimeInPercentageTxtField = new TextField("sessionSetupTimeInPercentageCaption");
+    private TextField charterVsOpportunityTimeInPercentageTxtField = new TextField("charterVsOpportunityTimeInPercentageCaption");
+    private TextField dataFilesPathsTxtField = new TextField("dataFilesPathsCaption");
+    private TextField testNotesTxtField = new TextField("testNotesCaption");
+    private TextField opportunitiesTxtField = new TextField("opportunitiesCaption");
+    private TextField bugsTxtField = new TextField("bugsCaption");
+    private TextField issues = new TextField("issuesCaption");
 
     @Override
     protected void init(VaadinRequest request) {
@@ -46,36 +61,55 @@ public class MyMainView extends UI {
         return button;
     }
 
+    private Button buildSaveButton(Charter p) {
+        Button button = new Button(VaadinIcons.YOUTUBE);
+        button.addStyleName(ValoTheme.BUTTON_LARGE);
+        button.addClickListener(e -> createModalSaveConfirmationDialog(p));
+        return button;
+    }
+
+    private Button buildConfirmSaveButton(Charter charter, Window window) {
+        Button button = new Button(VaadinIcons.MONEY);
+        button.addStyleName(ValoTheme.BUTTON_LARGE);
+        button.addClickListener((Button.ClickListener) event -> {
+            saveCharter(charter);
+            window.close();
+        });
+
+        return button;
+    }
+
+    private Button buildCancelButton(Window window) {
+        Button button = new Button(VaadinIcons.ALARM);
+        button.addStyleName(ValoTheme.BUTTON_DANGER);
+        button.addClickListener((Button.ClickListener) event -> {
+            window.close();
+        });
+        return button;
+    }
+
     private void createModalEditDialog(Charter charter) {
         Window window = new Window("Edit Dialog");
         window.setModal(true);
+
         VerticalLayout verticalLayout = new VerticalLayout();
-        List<Component> allEditDialogComponents = createAllEditDialogComponents(charter);
-        for (Component component : allEditDialogComponents) {
-            verticalLayout.addComponents(component);
-        }
+        HorizontalLayout mainLayout = new HorizontalLayout(idTxtField, charterNameTxtField, areasTxtField);
+        HorizontalLayout secondLayout = new HorizontalLayout(startTxtField, nameOfTesterTxtField, taskBreakDownTxtField, durationTxtField);
+        HorizontalLayout thirdLayout = new HorizontalLayout(testDesignAndExecutionTimeInPercentTxtField, bugInvestigationAndReportingTimeInPercentTxtField, sessionSetupTimeInPercentageTxtField, charterVsOpportunityTimeInPercentageTxtField);
+        HorizontalLayout fourthLayout = new HorizontalLayout(dataFilesPathsTxtField,testNotesTxtField, opportunitiesTxtField, bugsTxtField, issues);
+
+        final Button cancelButton = buildCancelButton(window);
+        final Button saveButton = buildSaveButton(charter);
+        HorizontalLayout confirmationLayout = new HorizontalLayout(cancelButton, saveButton);
+        verticalLayout.addComponents(mainLayout, secondLayout, thirdLayout, fourthLayout, confirmationLayout);
+
+        setInitialStateOfAllEditDialogComponents(charter);
         window.setContent(verticalLayout);
         UI.getCurrent().addWindow(window);
     }
 
-    private List<Component> createAllEditDialogComponents(Charter charter) {
-        TextField idTxtField = new TextField("ID");
-        TextField charterNameTxtField = new TextField("CharterName");
-        TextField areasTxtField = new TextField("areasCaption");
-        TextField startTxtField = new TextField("startCaption");
-        TextField nameOfTesterTxtField = new TextField("nameOfTesterCaption");
-        TextField taskBreakDownTxtField = new TextField("taskBreakDownCaption");
-        TextField durationTxtField = new TextField("durationCaption");
-        TextField testDesignAndExecutionTimeInPercentTxtField = new TextField("testDesignAndExecutionTimeInPercentCaption");
-        TextField bugInvestigationAndReportingTimeInPercentTxtField = new TextField("bugInvestigationAndReportingTimeInPercentCaption");
-        TextField sessionSetupTimeInPercentageTxtField = new TextField("sessionSetupTimeInPercentageCaption");
-        TextField charterVsOpportunityTimeInPercentageTxtField = new TextField("charterVsOpportunityTimeInPercentageCaption");
-        TextField dataFilesPathsTxtField = new TextField("dataFilesPathsCaption");
-        TextField testNotesTxtField = new TextField("testNotesCaption");
-        TextField opportunitiesTxtField = new TextField("opportunitiesCaption");
-        TextField bugsTxtField = new TextField("bugsCaption");
-        TextField issues = new TextField("issuesCaption");
 
+    private void setInitialStateOfAllEditDialogComponents(Charter charter) {
         idTxtField.setValue(charter.getId());
         idTxtField.setReadOnly(true);
         idTxtField.setEnabled(false);
@@ -106,37 +140,7 @@ public class MyMainView extends UI {
         opportunitiesTxtField.setValue(Optional.ofNullable(charter.getOpportunities()).orElse(""));
         bugsTxtField.setValue(Optional.ofNullable(charter.getBugs()).orElse(""));
         issues.setValue(Optional.ofNullable(charter.getIssues()).orElse(""));
-
-        List<Component> components = new ArrayList<>();
-        components.add(idTxtField);
-        components.add(charterNameTxtField);
-        components.add(areasTxtField);
-        components.add(startTxtField);
-        components.add(nameOfTesterTxtField);
-        components.add(taskBreakDownTxtField);
-        components.add(durationTxtField);
-        components.add(testDesignAndExecutionTimeInPercentTxtField);
-        components.add(bugInvestigationAndReportingTimeInPercentTxtField);
-        components.add(sessionSetupTimeInPercentageTxtField);
-        components.add(charterVsOpportunityTimeInPercentageTxtField);
-        components.add(dataFilesPathsTxtField);
-        components.add(testNotesTxtField);
-        components.add(opportunitiesTxtField);
-        components.add(bugsTxtField);
-        components.add(issues);
-
-        Button saveButton = new Button(VaadinIcons.SAFE);
-        saveButton.addStyleName(ValoTheme.BUTTON_SMALL);
-        Charter overriddenCharter = overrideCharterByTextFieldValues(charter, components);
-        saveButton.addClickListener(e -> createModalSaveConfirmationDialog(overriddenCharter));
-        components.add(saveButton);
-        return components;
     }
-
-    private Charter overrideCharterByTextFieldValues(Charter charter, List<Component> components) {
-        return null;
-            }
-
 
     private void deleteCharter(Charter p) {
         charterRepository.delete(p);
@@ -150,18 +154,12 @@ public class MyMainView extends UI {
 
     private void createModalConfirmationDialog(Charter c) {
 
-        Window confirmationDialogWindow = new Window("Confirm Delete Dialog");
-
-        confirmationDialogWindow.setHeight("200px");
-        confirmationDialogWindow.setWidth("400px");
-        confirmationDialogWindow.setPositionX(200);
-        confirmationDialogWindow.setPositionY(50);
-        confirmationDialogWindow.setModal(true);
+        Window confirmationDialogWindow = createConfirmationDialogWindow("Confirm Delete Dialog");
 
         VerticalLayout verticalLayout = new VerticalLayout();
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         Button confirmDeleteButton = new Button("Delete", VaadinIcons.EXCLAMATION_CIRCLE);
-        Button cancelButton = new Button("Cancel");
+        Button cancelButton = buildCancelButton(confirmationDialogWindow);
         Label label = new Label("Möchtest du die Charter wirklich löschen?");
         horizontalLayout.addComponents(cancelButton, confirmDeleteButton);
         verticalLayout.addComponents(label, horizontalLayout);
@@ -170,42 +168,36 @@ public class MyMainView extends UI {
             deleteCharter(c);
             confirmationDialogWindow.close();
         });
-        cancelButton.addClickListener((Button.ClickListener) event -> {
-            confirmationDialogWindow.close();
-        });
 
         confirmationDialogWindow.setContent(verticalLayout);
         UI.getCurrent().addWindow(confirmationDialogWindow);
     }
 
-    private void createModalSaveConfirmationDialog(Charter c) {
+    private void createModalSaveConfirmationDialog(Charter charter) {
 
-        Window confirmationDialogWindow = new Window("Confirm Save Dialog");
+        Window confirmationDialogWindow = createConfirmationDialogWindow("Confirm Save Dialog");
+
+        VerticalLayout verticalLayout = new VerticalLayout();
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        Button confirmSaveButton = buildConfirmSaveButton(charter, confirmationDialogWindow);
+        Button cancelButton = buildCancelButton(confirmationDialogWindow);
+        Label label = new Label("Möchtest du die Charter wirklich speichern?");
+        horizontalLayout.addComponents(cancelButton, confirmSaveButton);
+        verticalLayout.addComponents(label, horizontalLayout);
+
+        confirmationDialogWindow.setContent(verticalLayout);
+        UI.getCurrent().addWindow(confirmationDialogWindow);
+    }
+
+    private Window createConfirmationDialogWindow(String dialogTitle) {
+        Window confirmationDialogWindow = new Window(dialogTitle);
 
         confirmationDialogWindow.setHeight("200px");
         confirmationDialogWindow.setWidth("400px");
         confirmationDialogWindow.setPositionX(200);
         confirmationDialogWindow.setPositionY(50);
         confirmationDialogWindow.setModal(true);
-
-        VerticalLayout verticalLayout = new VerticalLayout();
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        Button confirmSaveButton = new Button("Save", VaadinIcons.EXCLAMATION_CIRCLE);
-        Button cancelButton = new Button("Cancel");
-        Label label = new Label("Möchtest du die Charter wirklich speichern?");
-        horizontalLayout.addComponents(cancelButton, confirmSaveButton);
-        verticalLayout.addComponents(label, horizontalLayout);
-
-        confirmSaveButton.addClickListener((Button.ClickListener) event -> {
-            saveCharter(c);
-            confirmationDialogWindow.close();
-        });
-        cancelButton.addClickListener((Button.ClickListener) event -> {
-            confirmationDialogWindow.close();
-        });
-
-        confirmationDialogWindow.setContent(verticalLayout);
-        UI.getCurrent().addWindow(confirmationDialogWindow);
+        return confirmationDialogWindow;
     }
 
 }
