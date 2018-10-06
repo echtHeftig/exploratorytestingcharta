@@ -48,6 +48,7 @@ public class MyMainView extends UI {
 
     private void createModalEditDialog(Charter charter) {
         Window window = new Window("Edit Dialog");
+        window.setModal(true);
         VerticalLayout verticalLayout = new VerticalLayout();
         List<Component> allEditDialogComponents = createAllEditDialogComponents(charter);
         for (Component component : allEditDialogComponents) {
