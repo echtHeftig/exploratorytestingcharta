@@ -129,7 +129,9 @@ public class MyMainView extends UI {
         window.setModal(true);
 
         VerticalLayout verticalLayout = new VerticalLayout();
-        HorizontalLayout mainLayout = new HorizontalLayout(idTxtField, charterNameTxtField, areasTxtField);
+        HorizontalLayout idLayout = new HorizontalLayout();
+        idLayout.addComponentsAndExpand(idTxtField);
+        HorizontalLayout mainLayout = new HorizontalLayout(charterNameTxtField, areasTxtField);
         HorizontalLayout secondLayout = new HorizontalLayout(startTxtField, nameOfTesterTxtField, taskBreakDownTxtField, durationTxtField);
         HorizontalLayout thirdLayout = new HorizontalLayout(testDesignAndExecutionTimeInPercentTxtField, bugInvestigationAndReportingTimeInPercentTxtField, sessionSetupTimeInPercentageTxtField, charterVsOpportunityTimeInPercentageTxtField);
         HorizontalLayout fourthLayout = new HorizontalLayout(dataFilesPathsTxtField,testNotesTxtField, opportunitiesTxtField, bugsTxtField, issuesTxtField);
@@ -138,7 +140,8 @@ public class MyMainView extends UI {
         final Button saveButton = buildSaveButton(charter);
 
         HorizontalLayout confirmationLayout = new HorizontalLayout(cancelButton, saveButton);
-        verticalLayout.addComponents(mainLayout, secondLayout, thirdLayout, fourthLayout, confirmationLayout);
+        verticalLayout.addComponents(idLayout, mainLayout, secondLayout,
+                thirdLayout, fourthLayout, confirmationLayout);
 
         window.setContent(verticalLayout);
         UI.getCurrent().addWindow(window);
