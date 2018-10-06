@@ -1,5 +1,7 @@
 package charter;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValidationException;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
@@ -32,7 +34,33 @@ public class MyMainView extends UI {
     private TextField testNotesTxtField = new TextField("testNotesCaption");
     private TextField opportunitiesTxtField = new TextField("opportunitiesCaption");
     private TextField bugsTxtField = new TextField("bugsCaption");
-    private TextField issues = new TextField("issuesCaption");
+    private TextField issuesTxtField = new TextField("issuesCaption");
+
+    private Binder<Charter> createBinderForAllFields() {
+        Binder<Charter> binder = new Binder<>();
+        //TODO fill in binder for id (immutable) if necessary. find out whether its necessary or not
+        binder.forField(charterNameTxtField)
+                .bind(Charter::getCharterName, Charter::setCharterName);
+        binder.forField(areasTxtField)
+                .bind(Charter::getAreas, Charter::setAreas);
+        //TODO fill in all bindings for non Strings -> how does it work?
+        binder.forField(nameOfTesterTxtField)
+                .bind(Charter::getNameOfTester, Charter::setNameOfTester);
+        binder.forField(taskBreakDownTxtField)
+                .bind(Charter::getTaskBreakDown, Charter::setTaskBreakDown);
+        binder.forField(dataFilesPathsTxtField)
+                .bind(Charter::getDataFilesPaths, Charter::setDataFilesPaths);
+        binder.forField(testNotesTxtField)
+                .bind(Charter::getTestNotes, Charter::setTestNotes);
+        binder.forField(opportunitiesTxtField)
+                .bind(Charter::getOpportunities, Charter::setOpportunities);
+        binder.forField(bugsTxtField)
+                .bind(Charter::getBugs, Charter::setBugs);
+        binder.forField(issuesTxtField)
+                .bind(Charter::getIssues, Charter::setIssues);
+
+        return binder;
+    }
 
     @Override
     protected void init(VaadinRequest request) {
@@ -69,9 +97,15 @@ public class MyMainView extends UI {
     }
 
     private Button buildConfirmSaveButton(Charter charter, Window window) {
+        Binder<Charter> binder = createBinderForAllFields();
         Button button = new Button(VaadinIcons.MONEY);
         button.addStyleName(ValoTheme.BUTTON_LARGE);
         button.addClickListener((Button.ClickListener) event -> {
+            try {
+                binder.writeBean(charter);
+            } catch (ValidationException e) {
+                e.printStackTrace();
+            }
             saveCharter(charter);
             window.close();
         });
@@ -89,6 +123,8 @@ public class MyMainView extends UI {
     }
 
     private void createModalEditDialog(Charter charter) {
+        setInitialStateOfAllEditDialogComponents(charter);
+
         Window window = new Window("Edit Dialog");
         window.setModal(true);
 
@@ -96,14 +132,14 @@ public class MyMainView extends UI {
         HorizontalLayout mainLayout = new HorizontalLayout(idTxtField, charterNameTxtField, areasTxtField);
         HorizontalLayout secondLayout = new HorizontalLayout(startTxtField, nameOfTesterTxtField, taskBreakDownTxtField, durationTxtField);
         HorizontalLayout thirdLayout = new HorizontalLayout(testDesignAndExecutionTimeInPercentTxtField, bugInvestigationAndReportingTimeInPercentTxtField, sessionSetupTimeInPercentageTxtField, charterVsOpportunityTimeInPercentageTxtField);
-        HorizontalLayout fourthLayout = new HorizontalLayout(dataFilesPathsTxtField,testNotesTxtField, opportunitiesTxtField, bugsTxtField, issues);
+        HorizontalLayout fourthLayout = new HorizontalLayout(dataFilesPathsTxtField,testNotesTxtField, opportunitiesTxtField, bugsTxtField, issuesTxtField);
 
         final Button cancelButton = buildCancelButton(window);
         final Button saveButton = buildSaveButton(charter);
+
         HorizontalLayout confirmationLayout = new HorizontalLayout(cancelButton, saveButton);
         verticalLayout.addComponents(mainLayout, secondLayout, thirdLayout, fourthLayout, confirmationLayout);
 
-        setInitialStateOfAllEditDialogComponents(charter);
         window.setContent(verticalLayout);
         UI.getCurrent().addWindow(window);
     }
@@ -139,7 +175,7 @@ public class MyMainView extends UI {
         testNotesTxtField.setValue(Optional.ofNullable(charter.getTestNotes()).orElse(""));
         opportunitiesTxtField.setValue(Optional.ofNullable(charter.getOpportunities()).orElse(""));
         bugsTxtField.setValue(Optional.ofNullable(charter.getBugs()).orElse(""));
-        issues.setValue(Optional.ofNullable(charter.getIssues()).orElse(""));
+        issuesTxtField.setValue(Optional.ofNullable(charter.getIssues()).orElse(""));
     }
 
     private void deleteCharter(Charter p) {
