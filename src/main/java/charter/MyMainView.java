@@ -22,7 +22,7 @@ public class MyMainView extends UI {
     private TextField idTxtField = new TextField("ID");
     private TextField charterNameTxtField = new TextField("CharterName");
     private TextField areasTxtField = new TextField("areasCaption");
-    private TextField startTxtField = new TextField("startCaption");
+    private DateTimeField startTxtField = new DateTimeField("Start of Session");
     private TextField nameOfTesterTxtField = new TextField("nameOfTesterCaption");
     private TextField taskBreakDownTxtField = new TextField("taskBreakDownCaption");
     private TextField durationTxtField = new TextField("durationCaption");
@@ -43,6 +43,8 @@ public class MyMainView extends UI {
                 .bind(Charter::getCharterName, Charter::setCharterName);
         binder.forField(areasTxtField)
                 .bind(Charter::getAreas, Charter::setAreas);
+        binder.forField(startTxtField)
+                .bind(Charter::getStart, Charter::setStart);
         //TODO fill in all bindings for non Strings -> how does it work?
         binder.forField(nameOfTesterTxtField)
                 .bind(Charter::getNameOfTester, Charter::setNameOfTester);
@@ -155,7 +157,7 @@ public class MyMainView extends UI {
         charterNameTxtField.setValue(Optional.ofNullable(charter.getCharterName()).orElse(""));
         areasTxtField.setValue(Optional.ofNullable(charter.getAreas()).orElse(""));
         startTxtField.setValue(
-                charter.getStart() == null ? "" : charter.getStart().toString()
+                charter.getStart() == null ? startTxtField.getEmptyValue() : charter.getStart()
         );
         nameOfTesterTxtField.setValue(Optional.ofNullable(charter.getNameOfTester()).orElse(""));
         taskBreakDownTxtField.setValue(Optional.ofNullable(charter.getTaskBreakDown()).orElse(""));

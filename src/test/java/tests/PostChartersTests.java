@@ -32,7 +32,7 @@ public class PostChartersTests extends BaseApiTests {
         response.then()
                 .body("charterName", is("Charta Post contains correct values"))
                 .body("areas", is("My area value is correct"))
-                .body("start", is("2018-12-13T14:15:02.030+0000"))
+                .body("start", is("2019-02-24T08:17:09.149"))
                 .body("nameOfTester", is("The POST tester"))
                 .body("taskBreakDown", is("A Breakdown for testing http post"))
                 .body("duration", is(14628))

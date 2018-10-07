@@ -1,8 +1,12 @@
 package charter;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.data.annotation.Id;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 public class Charter {
 
@@ -10,7 +14,9 @@ public class Charter {
     private String id;
     private String charterName;
     private String areas;
-    private Calendar start;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime start;
     private String nameOfTester;
     private String taskBreakDown;
     private Integer duration;
@@ -26,7 +32,7 @@ public class Charter {
 
     public Charter() {}
 
-    public Charter(String charterName, String areas, Calendar start, String nameOfTester, String taskBreakDown, Integer duration, Integer testDesignAndExecutionTimeInPercent, Integer bugInvestigationAndReportingTimeInPercent, Integer sessionSetupTimeInPercentage, Integer charterVsOpportunityTimeInPercentage, String dataFilesPaths, String testNotes, String opportunities, String bugs, String issues) {
+    public Charter(String charterName, String areas, LocalDateTime start, String nameOfTester, String taskBreakDown, Integer duration, Integer testDesignAndExecutionTimeInPercent, Integer bugInvestigationAndReportingTimeInPercent, Integer sessionSetupTimeInPercentage, Integer charterVsOpportunityTimeInPercentage, String dataFilesPaths, String testNotes, String opportunities, String bugs, String issues) {
         this.charterName = charterName;
         this.areas = areas;
         this.start = start;
@@ -56,7 +62,7 @@ public class Charter {
         return areas;
     }
 
-    public Calendar getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
@@ -120,7 +126,7 @@ public class Charter {
         this.areas = areas;
     }
 
-    public void setStart(Calendar start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
