@@ -97,21 +97,21 @@ public class MyMainView extends UI {
     }
 
     private Button buildEditButton(Charter charter) {
-        Button button = new Button(VaadinIcons.EDIT);
+        Button button = new Button("Edit", VaadinIcons.EDIT);
         button.addStyleName(ValoTheme.BUTTON_SMALL);
         button.addClickListener(e -> createModalEditDialog(charter));
         return button;
     }
 
     private Button buildDeleteButton(Charter p) {
-        Button button = new Button(VaadinIcons.CLOSE);
+        Button button = new Button("Delete", VaadinIcons.CLOSE);
         button.addStyleName(ValoTheme.BUTTON_SMALL);
         button.addClickListener(e -> createModalConfirmationDialog(p));
         return button;
     }
 
     private Button buildSaveButton(Charter p) {
-        Button button = new Button(VaadinIcons.YOUTUBE);
+        Button button = new Button("Save", VaadinIcons.CHECK);
         button.addStyleName(ValoTheme.BUTTON_LARGE);
         button.addClickListener(e -> createModalSaveConfirmationDialog(p));
         return button;
@@ -119,7 +119,7 @@ public class MyMainView extends UI {
 
     private Button buildConfirmSaveButton(Charter charter, Window window) {
         Binder<Charter> binder = createBinderForAllFields();
-        Button button = new Button(VaadinIcons.MONEY);
+        Button button = new Button("Confirm Save", VaadinIcons.CHECK_CIRCLE_O);
         button.addStyleName(ValoTheme.BUTTON_LARGE);
         button.addClickListener((Button.ClickListener) event -> {
             try {
@@ -137,7 +137,7 @@ public class MyMainView extends UI {
     }
 
     private Button buildCancelButton(Window window) {
-        Button button = new Button(VaadinIcons.ALARM);
+        Button button = new Button("Cancel", VaadinIcons.CLOSE_BIG);
         button.addStyleName(ValoTheme.BUTTON_DANGER);
         button.addClickListener((Button.ClickListener) event -> {
             window.close();
