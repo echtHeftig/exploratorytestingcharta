@@ -2,6 +2,7 @@ package charter;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
@@ -45,11 +46,25 @@ public class MyMainView extends UI {
                 .bind(Charter::getAreas, Charter::setAreas);
         binder.forField(startTxtField)
                 .bind(Charter::getStart, Charter::setStart);
-        //TODO fill in all bindings for non Strings -> how does it work?
         binder.forField(nameOfTesterTxtField)
                 .bind(Charter::getNameOfTester, Charter::setNameOfTester);
         binder.forField(taskBreakDownTxtField)
                 .bind(Charter::getTaskBreakDown, Charter::setTaskBreakDown);
+        binder.forField(durationTxtField)
+                .withConverter(createNewStringToIntegerConverter())
+                .bind(Charter::getDuration, Charter::setDuration);
+        binder.forField(testDesignAndExecutionTimeInPercentTxtField)
+                .withConverter(createNewStringToIntegerConverter())
+                .bind(Charter::getTestDesignAndExecutionTimeInPercent, Charter::setTestDesignAndExecutionTimeInPercent);
+        binder.forField(bugInvestigationAndReportingTimeInPercentTxtField)
+                .withConverter(createNewStringToIntegerConverter())
+                .bind(Charter::getBugInvestigationAndReportingTimeInPercent, Charter::setBugInvestigationAndReportingTimeInPercent);
+        binder.forField(sessionSetupTimeInPercentageTxtField)
+                .withConverter(createNewStringToIntegerConverter())
+                .bind(Charter::getSessionSetupTimeInPercentage, Charter::setSessionSetupTimeInPercentage);
+        binder.forField(charterVsOpportunityTimeInPercentageTxtField)
+                .withConverter(createNewStringToIntegerConverter())
+                .bind(Charter::getCharterVsOpportunityTimeInPercentage, Charter::setCharterVsOpportunityTimeInPercentage);
         binder.forField(dataFilesPathsTxtField)
                 .bind(Charter::getDataFilesPaths, Charter::setDataFilesPaths);
         binder.forField(testNotesTxtField)
@@ -62,6 +77,10 @@ public class MyMainView extends UI {
                 .bind(Charter::getIssues, Charter::setIssues);
 
         return binder;
+    }
+
+    private StringToIntegerConverter createNewStringToIntegerConverter() {
+        return new StringToIntegerConverter("Ungültiger Wert eingetragen");
     }
 
     @Override
@@ -105,8 +124,10 @@ public class MyMainView extends UI {
         button.addClickListener((Button.ClickListener) event -> {
             try {
                 binder.writeBean(charter);
+                Notification.show("Das Speichern war erfolgreich");
             } catch (ValidationException e) {
                 e.printStackTrace();
+                Notification.show("Das Speichern hat nicht geklappt", Notification.Type.ERROR_MESSAGE);
             }
             saveCharter(charter);
             window.close();
