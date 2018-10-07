@@ -159,6 +159,7 @@ public class MyMainView extends UI {
         startTxtField.setValue(
                 charter.getStart() == null ? startTxtField.getEmptyValue() : charter.getStart()
         );
+        startTxtField.setDateFormat("dd.MM.yyyy HH:mm");
         nameOfTesterTxtField.setValue(Optional.ofNullable(charter.getNameOfTester()).orElse(""));
         taskBreakDownTxtField.setValue(Optional.ofNullable(charter.getTaskBreakDown()).orElse(""));
         durationTxtField.setValue(
