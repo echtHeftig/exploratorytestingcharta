@@ -20,7 +20,7 @@ public class MyMainView extends UI {
 
     private Grid<Charter> grid = new Grid<>(Charter.class);
 
-    private TextField idTxtField = new TextField("ID");
+    private TextField idTxtField = new TextField("Id");
     private TextField charterNameTxtField = new TextField("CharterName");
     private TextField areasTxtField = new TextField("areasCaption");
     private DateTimeField startTxtField = new DateTimeField("Start of Session");
@@ -37,9 +37,25 @@ public class MyMainView extends UI {
     private TextField bugsTxtField = new TextField("bugsCaption");
     private TextField issuesTxtField = new TextField("issuesCaption");
 
+    private Binder<Charter> binder = new Binder<>();
+
+    @Override
+    protected void init(VaadinRequest request) {
+        VerticalLayout verticalLayout = new VerticalLayout();
+        grid.setItems(charterRepository.findAll());
+        grid.setWidth(100, Unit.PERCENTAGE);
+        grid.setColumns("id", "charterName", "nameOfTester", "areas");
+        grid.setColumnOrder("id", "charterName", "nameOfTester");
+        grid.addComponentColumn(this::buildEditButton);
+        grid.addComponentColumn(this::buildDeleteButton);
+        verticalLayout.addComponent(buildCreateButton());
+        verticalLayout.addComponent(grid);
+        setContent(verticalLayout);
+    }
+
     private Binder<Charter> createBinderForAllFields() {
-        Binder<Charter> binder = new Binder<>();
-        //TODO fill in binder for id (immutable) if necessary. find out whether its necessary or not
+        binder.forField(idTxtField)
+                .bind(Charter::getId, null);
         binder.forField(charterNameTxtField)
                 .bind(Charter::getCharterName, Charter::setCharterName);
         binder.forField(areasTxtField)
@@ -83,17 +99,11 @@ public class MyMainView extends UI {
         return new StringToIntegerConverter("Ungültiger Wert eingetragen");
     }
 
-    @Override
-    protected void init(VaadinRequest request) {
-        VerticalLayout verticalLayout = new VerticalLayout();
-        grid.setItems(charterRepository.findAll());
-        grid.setWidth(100, Unit.PERCENTAGE);
-        grid.setColumns("id", "charterName", "nameOfTester", "areas");
-        grid.setColumnOrder("id", "charterName", "nameOfTester");
-        grid.addComponentColumn(this::buildEditButton);
-        grid.addComponentColumn(this::buildDeleteButton);
-        verticalLayout.addComponent(grid);
-        setContent(verticalLayout);
+    private Button buildCreateButton() {
+        final Button button = new Button("Create", VaadinIcons.ADD_DOCK);
+        button.addClickListener(e -> createModalCreateDialog());
+        button.addStyleName(ValoTheme.BUTTON_HUGE);
+        return button;
     }
 
     private Button buildEditButton(Charter charter) {
@@ -117,6 +127,15 @@ public class MyMainView extends UI {
         return button;
     }
 
+    private Button buildCancelButton(Window window) {
+        Button button = new Button("Cancel", VaadinIcons.CLOSE_BIG);
+        button.addStyleName(ValoTheme.BUTTON_DANGER);
+        button.addClickListener((Button.ClickListener) event -> {
+            window.close();
+        });
+        return button;
+    }
+
     private Button buildConfirmSaveButton(Charter charter, Window window) {
         Binder<Charter> binder = createBinderForAllFields();
         Button button = new Button("Confirm Save", VaadinIcons.CHECK_CIRCLE_O);
@@ -136,18 +155,8 @@ public class MyMainView extends UI {
         return button;
     }
 
-    private Button buildCancelButton(Window window) {
-        Button button = new Button("Cancel", VaadinIcons.CLOSE_BIG);
-        button.addStyleName(ValoTheme.BUTTON_DANGER);
-        button.addClickListener((Button.ClickListener) event -> {
-            window.close();
-        });
-        return button;
-    }
-
     private void createModalEditDialog(Charter charter) {
         setInitialStateOfAllEditDialogComponents(charter);
-
         Window window = new Window("Edit Dialog");
         window.setModal(true);
 
@@ -170,9 +179,55 @@ public class MyMainView extends UI {
         UI.getCurrent().addWindow(window);
     }
 
+    private void createModalCreateDialog() {
+        setAllFieldsToEmpty();
+        Charter charter = new Charter();
+        Window window = new Window("Create Dialog");
+        window.setModal(true);
+
+        VerticalLayout verticalLayout = new VerticalLayout();
+        HorizontalLayout idLayout = new HorizontalLayout();
+        idTxtField.setReadOnly(true);
+        idTxtField.setEnabled(false);
+        idLayout.addComponentsAndExpand(idTxtField);
+        HorizontalLayout mainLayout = new HorizontalLayout(charterNameTxtField, areasTxtField);
+        HorizontalLayout secondLayout = new HorizontalLayout(startTxtField, nameOfTesterTxtField, taskBreakDownTxtField, durationTxtField);
+        HorizontalLayout thirdLayout = new HorizontalLayout(testDesignAndExecutionTimeInPercentTxtField, bugInvestigationAndReportingTimeInPercentTxtField, sessionSetupTimeInPercentageTxtField, charterVsOpportunityTimeInPercentageTxtField);
+        HorizontalLayout fourthLayout = new HorizontalLayout(dataFilesPathsTxtField,testNotesTxtField, opportunitiesTxtField, bugsTxtField, issuesTxtField);
+
+        final Button cancelButton = buildCancelButton(window);
+        final Button saveButton = buildSaveButton(charter);
+
+        HorizontalLayout confirmationLayout = new HorizontalLayout(cancelButton, saveButton);
+        verticalLayout.addComponents(idLayout, mainLayout, secondLayout,
+                thirdLayout, fourthLayout, confirmationLayout);
+
+        window.setContent(verticalLayout);
+        UI.getCurrent().addWindow(window);
+    }
+
+    private void setAllFieldsToEmpty() {
+        this.idTxtField.setValue("");
+        this.charterNameTxtField.setValue("");
+        this.areasTxtField.setValue("");
+        this.startTxtField.setValue(startTxtField.getEmptyValue());
+        this.nameOfTesterTxtField.setValue("");
+        this.taskBreakDownTxtField.setValue("");
+        this.durationTxtField.setValue("");
+        this.testDesignAndExecutionTimeInPercentTxtField.setValue("");
+        this.bugInvestigationAndReportingTimeInPercentTxtField.setValue("");
+        this.sessionSetupTimeInPercentageTxtField.setValue("");
+        this.charterVsOpportunityTimeInPercentageTxtField.setValue("");
+        this.dataFilesPathsTxtField.setValue("");
+        this.testNotesTxtField.setValue("");
+        this.opportunitiesTxtField.setValue("");
+        this.bugsTxtField.setValue("");
+        this.issuesTxtField.setValue("");
+    }
+
 
     private void setInitialStateOfAllEditDialogComponents(Charter charter) {
-        idTxtField.setValue(charter.getId());
+        idTxtField.setValue(Optional.ofNullable(charter.getId()).orElse(""));
         idTxtField.setReadOnly(true);
         idTxtField.setEnabled(false);
         charterNameTxtField.setValue(Optional.ofNullable(charter.getCharterName()).orElse(""));
