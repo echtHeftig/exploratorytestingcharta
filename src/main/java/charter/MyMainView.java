@@ -10,11 +10,14 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @SpringUI(path = "")
 public class MyMainView extends UI {
 
+    public static final String EDIT_DIALOG_TITLE = "Edit Dialog";
+    public static final String CREATE_DIALOG_TITLE = "Create Dialog";
     @Autowired
     private CharterRepository charterRepository;
 
@@ -150,6 +153,13 @@ public class MyMainView extends UI {
             }
             saveCharter(charter);
             window.close();
+            final Collection<Window> windows = UI.getCurrent().getWindows();
+            for(Window existingWindow : windows) {
+                if(existingWindow.getCaption().equals(EDIT_DIALOG_TITLE) ||
+                        existingWindow.getCaption().equals(CREATE_DIALOG_TITLE)) {
+                    existingWindow.close();
+                }
+            }
         });
 
         return button;
@@ -157,7 +167,7 @@ public class MyMainView extends UI {
 
     private void createModalEditDialog(Charter charter) {
         setInitialStateOfAllEditDialogComponents(charter);
-        Window window = new Window("Edit Dialog");
+        Window window = new Window(EDIT_DIALOG_TITLE);
         window.setModal(true);
 
         VerticalLayout verticalLayout = new VerticalLayout();
@@ -182,7 +192,7 @@ public class MyMainView extends UI {
     private void createModalCreateDialog() {
         setAllFieldsToEmpty();
         Charter charter = new Charter();
-        Window window = new Window("Create Dialog");
+        Window window = new Window(CREATE_DIALOG_TITLE);
         window.setModal(true);
 
         VerticalLayout verticalLayout = new VerticalLayout();
