@@ -1,5 +1,6 @@
 package charter;
 
+import charter.model.CharterDescription;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -29,10 +30,11 @@ public class Charter {
     private String opportunities;
     private String bugs;
     private String issues;
+    private CharterDescription charterDescription;
 
     public Charter() {}
 
-    public Charter(String charterName, String areas, LocalDateTime start, String nameOfTester, String taskBreakDown, Integer duration, Integer testDesignAndExecutionTimeInPercent, Integer bugInvestigationAndReportingTimeInPercent, Integer sessionSetupTimeInPercentage, Integer charterVsOpportunityTimeInPercentage, String dataFilesPaths, String testNotes, String opportunities, String bugs, String issues) {
+    public Charter(String charterName, String areas, LocalDateTime start, String nameOfTester, String taskBreakDown, Integer duration, Integer testDesignAndExecutionTimeInPercent, Integer bugInvestigationAndReportingTimeInPercent, Integer sessionSetupTimeInPercentage, Integer charterVsOpportunityTimeInPercentage, String dataFilesPaths, String testNotes, String opportunities, String bugs, String issues, CharterDescription charterDescription) {
         this.charterName = charterName;
         this.areas = areas;
         this.start = start;
@@ -48,6 +50,7 @@ public class Charter {
         this.opportunities = opportunities;
         this.bugs = bugs;
         this.issues = issues;
+        this.charterDescription = charterDescription;
     }
 
     public String getId() {
@@ -176,5 +179,13 @@ public class Charter {
 
     public void setIssues(String issues) {
         this.issues = issues;
+    }
+
+    public CharterDescription getCharterDescription() {
+        return charterDescription;
+    }
+
+    public void setCharterDescription(CharterDescription charterDescription) {
+        this.charterDescription = charterDescription;
     }
 }

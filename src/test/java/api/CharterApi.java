@@ -1,5 +1,6 @@
 package api;
 
+import charter.Charter;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -16,6 +17,16 @@ public class CharterApi {
                 .log().all()
                 .when().post("/charters")
                 .prettyPeek();
+    }
+
+    public static Charter postCharterAndGetPojo(File jsonFile) {
+        return given()
+                .contentType(ContentType.JSON)
+                .body(jsonFile).accept(ContentType.JSON)
+                .log().all()
+                .when().post("/charters")
+                .then()
+                .extract().as(Charter.class);
     }
 
     public static Response postCharter(String jsonAsString) {

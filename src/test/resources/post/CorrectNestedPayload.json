@@ -1,0 +1,6 @@
+{
+  "charterDescription": {"explore":"the nested user area","with":"different nested user names","to":"find out nests"},
+  "charterName": "myNestedCharter",
+  "bugs": "myFoundBugsIn nested charter",
+  "start": "2020-05-11T08:23:09.129"
+}
