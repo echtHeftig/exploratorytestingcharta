@@ -1,5 +1,7 @@
-package charter;
+package charter.view;
 
+import charter.model.CharterRepository;
+import charter.model.Charter;
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
 import com.vaadin.data.converter.StringToIntegerConverter;

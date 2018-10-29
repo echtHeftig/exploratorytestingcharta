@@ -1,4 +1,4 @@
-package charter;
+package charter.model;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

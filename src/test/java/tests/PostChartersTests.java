@@ -1,7 +1,7 @@
 package tests;
 
 import api.CharterApi;
-import charter.Charter;
+import charter.model.Charter;
 import io.restassured.response.Response;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
