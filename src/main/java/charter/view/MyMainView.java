@@ -146,14 +146,14 @@ public class MyMainView extends UI {
         Button button = new Button("Confirm Save", VaadinIcons.CHECK_CIRCLE_O);
         button.addStyleName(ValoTheme.BUTTON_LARGE);
         button.addClickListener((Button.ClickListener) event -> {
-            try {
-                binder.writeBean(charter);
+            final boolean writtenToBean = binder.writeBeanIfValid(charter);
+            if(writtenToBean) {
+                saveCharter(charter);
                 Notification.show("Das Speichern war erfolgreich");
-            } catch (ValidationException e) {
-                e.printStackTrace();
+            } else {
                 Notification.show("Das Speichern hat nicht geklappt", Notification.Type.ERROR_MESSAGE);
             }
-            saveCharter(charter);
+
             window.close();
             final Collection<Window> windows = UI.getCurrent().getWindows();
             for(Window existingWindow : windows) {
